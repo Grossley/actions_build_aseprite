@@ -9,109 +9,109 @@ on:
           required: true
           default: 'YES!'
 jobs:
-  # build-win:
-    # runs-on: windows-latest
-    # steps:
-    # - uses: actions/checkout@v2
-    # - uses: seanmiddleditch/gha-setup-ninja@master
-    # - name: Get Download Links
-      # run: |
-        # echo "::set-output name=action_ase::$(iwr https://api.github.com/repos/aseprite/aseprite/releases/latest | Select -ExpandProperty Content | jq -r '.assets[].browser_download_url')"
-        # echo "::set-output name=action_skia::$(iwr https://api.github.com/repos/aseprite/skia/releases/latest | Select -ExpandProperty Content | jq -r '.assets[].browser_download_url' | findstr Windows | findstr 64)"
-        # echo "::set-output name=action_tag::$(iwr https://api.github.com/repos/aseprite/aseprite/releases/latest | Select -ExpandProperty Content | jq -r '.tag_name')"
-      # id: links
-    # - name: Clone aseprite source
-      # run: |
-        # iwr -outf source.zip https://github.com/aseprite/aseprite/archive/refs/heads/main.zip
-        # 7z x source.zip aseprite-main -y -r -oaseprite | findstr ing
-        # iwr -outf source.zip ${{ steps.links.outputs.action_ase }}
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "third_party" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "laf" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "src/observable" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "src/clip" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "src/undo" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "src/flic" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "src/tga" | findstr ing
-        # 7z x source.zip -y -r -oaseprite/aseprite-main "src/app/file_system.cpp" | findstr ing
-    # - name: Download compiled skia
-      # run: |
-        # iwr -outf skia.zip ${{ steps.links.outputs.action_skia }}
-        # 7z x skia.zip -y -oskia | findstr ing
-    # - name: Find path
-      # id: path
-      # run: echo "::set-output name=working_path::$(pwd | findstr \)"
-    # - name: Enable Developer Command Prompt
-      # uses: ilammy/msvc-dev-cmd@master
-      # with:
-        # arch: x64
-        # sdk: 10.0.18362.0
-    # - name: Compiling aseprite for Windows
-      # run: |
-        # choco install openssl.light -y
-        # cd aseprite
-        # cd aseprite-main
-        # mkdir build
-        # cd build
-        # cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}\skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}\skia\out\Release-x64 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
-        # ninja aseprite
-    # - name: Archive bin
-      # run: |
-        # cd aseprite\aseprite-main\build\bin
-        # 7z -tzip a Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip * -mx0 | findstr ing
-        # cd ..\..\..\..
-        # mv aseprite\aseprite-main\build\bin\Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip .
-    # - name: Upload Windows artifact
-      # uses: actions/upload-artifact@v2
-      # with:
-        # path: Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip
-  # build-linux:
-    # runs-on: ubuntu-latest
-    # steps:
-      # - uses: actions/checkout@v2
-      # - name: Install dependencies
-        # run: sudo apt install -y cmake ninja-build libxcursor-dev libxi-dev libgl1-mesa-dev
-      # - name: Get Download Links
-        # run: |
-          # echo "::set-output name=action_ase::$(curl -sL https://api.github.com/repos/aseprite/aseprite/releases/latest | jq -r '.assets[].browser_download_url')"
-          # echo "::set-output name=action_skia::$(curl -sL https://api.github.com/repos/aseprite/skia/releases/latest | jq -r '.assets[].browser_download_url' | grep Linux | grep 64)"
-          # echo "::set-output name=action_tag::$(curl -s https://api.github.com/repos/aseprite/aseprite/releases/latest | jq -r '.tag_name')"
-        # id: links
-      # - name: Clone aseprite source
-        # run: |
-          # wget -q -O source.zip https://github.com/aseprite/aseprite/archive/refs/heads/main.zip
-          # 7z x source.zip aseprite-main -y -r -oaseprite | grep ing
-          # wget -q -O source.zip ${{ steps.links.outputs.action_ase }}
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "third_party" | grep ing
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "laf" | grep ing
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "src/observable" | grep ing
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "src/clip" | grep ing
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "src/undo" | grep ing
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "src/flic" | grep ing
-          # 7z x source.zip -y -r -oaseprite/aseprite-main "src/tga" | grep ing
-      # - name: Download compiled skia
-        # run: |
-          # wget -q -O skia.zip ${{ steps.links.outputs.action_skia }} 
-          # 7z x skia.zip -y -oskia | grep ing 
-      # - name: Find path
-        # id: path
-        # run: echo "::set-output name=working_path::$(pwd)"
-      # - name: Compiling aseprite for linux
-        # run: |
-           # cd aseprite
-           # cd aseprite-main
-           # mkdir build
-           # cd build
-           # cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}/skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}/skia/out/Release-x64 -G Ninja ..
-           # ninja aseprite
-      # - name: Package deb
-        # run: |
-           # mkdir deb-frame/usr/share/aseprite
-           # cp -r aseprite/aseprite-main/build/bin/* deb-frame/usr/share/aseprite/
-           # dpkg -b deb-frame Aseprite-${{ steps.links.outputs.action_tag }}-ubuntu_amd64.deb
-      # - name: Upload linux artifact
-        # uses: actions/upload-artifact@v2
-        # with:
-          # path: Aseprite-${{ steps.links.outputs.action_tag }}-ubuntu_amd64.deb
+  build-win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: seanmiddleditch/gha-setup-ninja@master
+    - name: Get Download Links
+      run: |
+        echo "::set-output name=action_ase::$(iwr https://api.github.com/repos/aseprite/aseprite/releases/latest | Select -ExpandProperty Content | jq -r '.assets[].browser_download_url')"
+        echo "::set-output name=action_skia::$(iwr https://api.github.com/repos/aseprite/skia/releases/latest | Select -ExpandProperty Content | jq -r '.assets[].browser_download_url' | findstr Windows | findstr 64)"
+        echo "::set-output name=action_tag::$(iwr https://api.github.com/repos/aseprite/aseprite/releases/latest | Select -ExpandProperty Content | jq -r '.tag_name')"
+      id: links
+    - name: Clone aseprite source
+      run: |
+        iwr -outf source.zip https://github.com/aseprite/aseprite/archive/refs/heads/main.zip
+        7z x source.zip aseprite-main -y -r -oaseprite | findstr ing
+        iwr -outf source.zip ${{ steps.links.outputs.action_ase }}
+        7z x source.zip -y -r -oaseprite/aseprite-main "third_party" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "laf" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "src/observable" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "src/clip" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "src/undo" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "src/flic" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "src/tga" | findstr ing
+        7z x source.zip -y -r -oaseprite/aseprite-main "src/app/file_system.cpp" | findstr ing
+    - name: Download compiled skia
+      run: |
+        iwr -outf skia.zip ${{ steps.links.outputs.action_skia }}
+        7z x skia.zip -y -oskia | findstr ing
+    - name: Find path
+      id: path
+      run: echo "::set-output name=working_path::$(pwd | findstr \)"
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@master
+      with:
+        arch: x64
+        sdk: 10.0.18362.0
+    - name: Compiling aseprite for Windows
+      run: |
+        choco install openssl.light -y
+        cd aseprite
+        cd aseprite-main
+        mkdir build
+        cd build
+        cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}\skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}\skia\out\Release-x64 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
+        ninja aseprite
+    - name: Archive bin
+      run: |
+        cd aseprite\aseprite-main\build\bin
+        7z -tzip a Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip * -mx0 | findstr ing
+        cd ..\..\..\..
+        mv aseprite\aseprite-main\build\bin\Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip .
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt install -y cmake ninja-build libxcursor-dev libxi-dev libgl1-mesa-dev
+      - name: Get Download Links
+        run: |
+          echo "::set-output name=action_ase::$(curl -sL https://api.github.com/repos/aseprite/aseprite/releases/latest | jq -r '.assets[].browser_download_url')"
+          echo "::set-output name=action_skia::$(curl -sL https://api.github.com/repos/aseprite/skia/releases/latest | jq -r '.assets[].browser_download_url' | grep Linux | grep 64)"
+          echo "::set-output name=action_tag::$(curl -s https://api.github.com/repos/aseprite/aseprite/releases/latest | jq -r '.tag_name')"
+        id: links
+      - name: Clone aseprite source
+        run: |
+          wget -q -O source.zip https://github.com/aseprite/aseprite/archive/refs/heads/main.zip
+          7z x source.zip aseprite-main -y -r -oaseprite | grep ing
+          wget -q -O source.zip ${{ steps.links.outputs.action_ase }}
+          7z x source.zip -y -r -oaseprite/aseprite-main "third_party" | grep ing
+          7z x source.zip -y -r -oaseprite/aseprite-main "laf" | grep ing
+          7z x source.zip -y -r -oaseprite/aseprite-main "src/observable" | grep ing
+          7z x source.zip -y -r -oaseprite/aseprite-main "src/clip" | grep ing
+          7z x source.zip -y -r -oaseprite/aseprite-main "src/undo" | grep ing
+          7z x source.zip -y -r -oaseprite/aseprite-main "src/flic" | grep ing
+          7z x source.zip -y -r -oaseprite/aseprite-main "src/tga" | grep ing
+      - name: Download compiled skia
+        run: |
+          wget -q -O skia.zip ${{ steps.links.outputs.action_skia }} 
+          7z x skia.zip -y -oskia | grep ing 
+      - name: Find path
+        id: path
+        run: echo "::set-output name=working_path::$(pwd)"
+      - name: Compiling aseprite for linux
+        run: |
+           cd aseprite
+           cd aseprite-main
+           mkdir build
+           cd build
+           cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}/skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}/skia/out/Release-x64 -G Ninja ..
+           ninja aseprite
+      - name: Package deb
+        run: |
+           mkdir deb-frame/usr/share/aseprite
+           cp -r aseprite/aseprite-main/build/bin/* deb-frame/usr/share/aseprite/
+           dpkg -b deb-frame Aseprite-${{ steps.links.outputs.action_tag }}-ubuntu_amd64.deb
+      - name: Upload linux artifact
+        uses: actions/upload-artifact@v2
+        with:
+          path: Aseprite-${{ steps.links.outputs.action_tag }}-ubuntu_amd64.deb
   build-macos:
     runs-on: macos-latest
     steps:
@@ -161,7 +161,7 @@ jobs:
       with:
           path: Aseprite-${{ steps.links.outputs.action_tag }}-osx-x64.zip
   Upload:
-    needs: [build-macos] #[build-win, build-linux] #, 
+    needs: [build-win, build-linux] #, build-macos]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
