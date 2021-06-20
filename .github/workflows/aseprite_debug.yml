@@ -161,7 +161,7 @@ jobs:
       with:
           path: Aseprite-${{ steps.links.outputs.action_tag }}-osx-x64.zip
   Upload:
-    needs: [build-win, build-linux] #, build-macos]
+    needs: [build-win, build-linux, build-macos]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
