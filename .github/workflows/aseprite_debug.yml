@@ -139,13 +139,16 @@ jobs:
       run: |
         wget -q -O skia.zip https://github.com/aseprite/skia/releases/latest/download/Skia-macOS-Release-x64.zip
         7z x skia.zip -y -oskia | grep ing
+    - name: Find path
+      id: path
+      run: echo "::set-output name=working_path::$(pwd)"
     - name: Compiling aseprite for macOS
       run: |
         cd aseprite
         cd aseprite-main
         mkdir build
         cd build
-        cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_12.1.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -DLAF_BACKEND=skia -DSKIA_DIR=../../skia -DSKIA_LIBRARY_DIR=../../skia/out/Release-x64 -G Ninja ..
+        cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_12.1.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}/skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}/skia/out/Release-x64 -G Ninja ..
         ninja aseprite
     - name: Archive bin
       run: |
@@ -158,7 +161,7 @@ jobs:
       with:
           path: Aseprite-${{ steps.links.outputs.action_tag }}-osx-x64.zip
   Upload:
-    needs: [build-win, build-linux] #, build-macos]
+    needs: [build-win, build-linux, build-macos]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
