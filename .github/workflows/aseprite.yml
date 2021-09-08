@@ -39,17 +39,17 @@ jobs:
     - name: Compiling aseprite for Windows
       run: |
         choco install openssl.light -y
-        cd aseprite\Aseprite-${{steps.links.action_tag}}-Source
+        cd aseprite\Aseprite-${{steps.links.outputs.action_tag}}-Source
         mkdir build
         cd build
         cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}\skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}\skia\out\Release-x64 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
         ninja aseprite
     - name: Archive bin
       run: |
-        cd aseprite\Aseprite-${{steps.links.action_tag}}-Source\build\bin
+        cd aseprite\Aseprite-${{steps.links.outputs.action_tag}}-Source\build\bin
         7z -tzip a Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip * -mx0 | findstr ing
         cd ..\..\..
-        mv aseprite\Aseprite-${{steps.links.action_tag}}-Source\build\bin\Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip .
+        mv aseprite\Aseprite-${{steps.links.outputs.action_tag}}-Source\build\bin\Aseprite-${{ steps.links.outputs.action_tag }}-win-x64.zip .
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v2
       with:
@@ -80,7 +80,7 @@ jobs:
         run: echo "::set-output name=working_path::$(pwd)"
       - name: Compiling aseprite for linux
         run: |
-           cd aseprite/Aseprite-${{steps.links.action_tag}}-Source
+           cd aseprite/Aseprite-${{steps.links.outputs.action_tag}}-Source
            mkdir build
            cd build
            cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DLAF_BACKEND=skia -DSKIA_DIR=${{ steps.path.outputs.working_path }}/skia -DSKIA_LIBRARY_DIR=${{ steps.path.outputs.working_path }}/skia/out/Release-x64 -G Ninja ..
@@ -88,7 +88,7 @@ jobs:
       - name: Package deb
         run: |
            mkdir deb-frame/usr/share/aseprite
-           cp -r aseprite/Aseprite-${{steps.links.action_tag}}-Source/build/bin/* deb-frame/usr/share/aseprite/
+           cp -r aseprite/Aseprite-${{steps.links.outputs.action_tag}}-Source/build/bin/* deb-frame/usr/share/aseprite/
            dpkg -b deb-frame Aseprite-${{ steps.links.outputs.action_tag }}-ubuntu_amd64.deb
       - name: Upload linux artifact
         uses: actions/upload-artifact@v2
@@ -116,17 +116,17 @@ jobs:
         7z x skia.zip -y -oskia | grep ing
     - name: Compiling aseprite for macOS
       run: |
-        cd aseprite/__MACOSX/Aseprite-${{steps.links.action_tag}}-Source
+        cd aseprite/__MACOSX/Aseprite-${{steps.links.outputs.action_tag}}-Source
         mkdir build
         cd build
         cmake -Wno-dev -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_12.1.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -DLAF_BACKEND=skia -DSKIA_DIR=../../skia -DSKIA_LIBRARY_DIR=../../skia/out/Release-x64 -G Ninja ..
         ninja aseprite
     - name: Archive bin
       run: |
-        cd aseprite/__MACOSX/Aseprite-${{steps.links.action_tag}}-Source/build/bin
+        cd aseprite/__MACOSX/Aseprite-${{steps.links.outputs.action_tag}}-Source/build/bin
         7z -tzip a Aseprite-v${{ steps.links.outputs.action_tag }}-osx-x64.zip * -mx0 | grep ing 
         cd ../../..
-        mv aseprite/__MACOSX/Aseprite-${{steps.links.action_tag}}-Source/build/bin/Aseprite-v${{ steps.links.outputs.action_tag }}-osx-x64.zip .
+        mv aseprite/__MACOSX/Aseprite-${{steps.links.outputs.action_tag}}-Source/build/bin/Aseprite-v${{ steps.links.outputs.action_tag }}-osx-x64.zip .
     - name: Upload macos artifact
       uses: actions/upload-artifact@v2
       with:
